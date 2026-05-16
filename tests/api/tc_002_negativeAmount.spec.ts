@@ -1,5 +1,5 @@
 import { APIResponse, expect } from "@playwright/test";
-import { ACCOUNTS, TRANSFER_DATA } from "../../config/config";
+import { ACCOUNTS, CONFIG, TRANSFER_DATA } from "../../config/config";
 import { apiTest as test } from "../../fixtures/apiFixture";
 
 test("tc_002 ,should return 400 for negative amount", async ({
@@ -10,7 +10,7 @@ test("tc_002 ,should return 400 for negative amount", async ({
   let response: APIResponse;
 
   await test.step("Attempt negative transfer", async () => {
-    response = await apiRequest.post("/transfer", {
+    response = await apiRequest.post(`${CONFIG.API_BASE}/transfer`, {
       params: {
         fromAccountId: ACCOUNTS.OVERDRAFT_FROM,
         toAccountId: ACCOUNTS.OVERDRAFT_TO,

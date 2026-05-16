@@ -1,5 +1,5 @@
 import { APIResponse, expect } from "@playwright/test";
-import { ACCOUNTS } from "../../config/config";
+import { ACCOUNTS, CONFIG } from "../../config/config";
 import { apiTest as test } from "../../fixtures/apiFixture";
 
 test("tc_005 ,Verify Balance State", async ({ apiRequest }) => {
@@ -11,7 +11,9 @@ test("tc_005 ,Verify Balance State", async ({ apiRequest }) => {
   let response: APIResponse;
 
   await test.step("Get account details", async () => {
-    response = await apiRequest.get(`/accounts/${ACCOUNTS.OVERDRAFT_FROM}`);
+    response = await apiRequest.get(
+      `${CONFIG.API_BASE}/accounts/${ACCOUNTS.OVERDRAFT_FROM}`,
+    );
   });
 
   await test.step("Verify balance state", async () => {

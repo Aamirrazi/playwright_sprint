@@ -2,20 +2,22 @@ import { expect } from "@playwright/test";
 import { ACCOUNTS, CONFIG, TRANSFER_DATA } from "../../config/config";
 import { apiTest as test } from "../../fixtures/apiFixture";
 
-test("tc_008 ,should reflect exactly 50 change", async ({ apiRequest }) => {
+test("tc_008 ,Valid API Transfer & GET Account Sync", async ({
+  apiRequest,
+}) => {
   let fromBalanceBefore: number;
   let toBalanceBefore: number;
 
   await test.step("Check initial balance", async () => {
     const fromBefore = await apiRequest.get(
-      `/accounts/${ACCOUNTS.API_TRANSFER_FROM}`,
+      `${CONFIG.API_BASE}/accounts/${ACCOUNTS.API_TRANSFER_FROM}`,
     );
     const toBefore = await apiRequest.get(
-      `/accounts/${ACCOUNTS.API_TRANSFER_TO}`,
+      `${CONFIG.API_BASE}/accounts/${ACCOUNTS.API_TRANSFER_TO}`,
     );
 
-    expect(fromBefore.status()).toBe(200);
-    expect(toBefore.status()).toBe(200);
+    expect(fromBefore.status(), "From Account API should return 200").toBe(200);
+    expect(toBefore.status(), "To Account API should return 200").toBe(200);
 
     const fromBody = await fromBefore.json();
     const toBody = await toBefore.json();
@@ -25,7 +27,7 @@ test("tc_008 ,should reflect exactly 50 change", async ({ apiRequest }) => {
   });
 
   await test.step("Perform API transfer", async () => {
-    const transferResp = await apiRequest.post("/transfer", {
+    const transferResp = await apiRequest.post(`${CONFIG.API_BASE}/transfer`, {
       params: {
         fromAccountId: ACCOUNTS.API_TRANSFER_FROM,
         toAccountId: ACCOUNTS.API_TRANSFER_TO,
@@ -33,15 +35,15 @@ test("tc_008 ,should reflect exactly 50 change", async ({ apiRequest }) => {
       },
     });
 
-    expect(transferResp.status()).toBe(200);
+    expect(transferResp.status(), "Transfer API should return 200").toBe(200);
   });
 
   await test.step("Check balances after transfer", async () => {
     const fromAfter = await apiRequest.get(
-      `/accounts/${ACCOUNTS.API_TRANSFER_FROM}`,
+      `${CONFIG.API_BASE}/accounts/${ACCOUNTS.API_TRANSFER_FROM}`,
     );
     const toAfter = await apiRequest.get(
-      `/accounts/${ACCOUNTS.API_TRANSFER_TO}`,
+      `${CONFIG.API_BASE}/accounts/${ACCOUNTS.API_TRANSFER_TO}`,
     );
 
     const fromBodyAfter = await fromAfter.json();
