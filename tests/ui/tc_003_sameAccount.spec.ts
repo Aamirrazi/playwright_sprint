@@ -2,9 +2,7 @@ import { expect } from "@playwright/test";
 import { ACCOUNTS } from "../../config/config";
 import { test } from "../../fixtures/baseFixture";
 
-test("tc_003 ,should prevent transfer b/w same account", async ({
-  transferPage,
-}) => {
+test("tc_003 ,Same Account Transfer", async ({ transferPage }) => {
   test.fail(true, "KNOWN BUG: App allows same-account transfers ");
 
   await test.step("Attempt same-account transfer", async () => {

@@ -8,7 +8,7 @@ type ApiFixtures = {
 export const apiTest = test.extend<ApiFixtures>({
   apiRequest: async ({ playwright }, use) => {
     const context = await playwright.request.newContext({
-      baseURL: CONFIG.BASE_URL,
+      baseURL: CONFIG.API_BASE,
       ignoreHTTPSErrors: true,
       extraHTTPHeaders: {
         Accept: "application/json",

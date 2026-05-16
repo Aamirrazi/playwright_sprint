@@ -2,7 +2,7 @@ import { expect } from "@playwright/test";
 import { ACCOUNTS } from "../../config/config";
 import { test } from "../../fixtures/baseFixture";
 
-test("tc_004 ,should prevent overDraft transfer", async ({
+test("tc_004 ,Exceed Available Balance (Overdraft)", async ({
   transferPage,
   overviewPage,
 }) => {

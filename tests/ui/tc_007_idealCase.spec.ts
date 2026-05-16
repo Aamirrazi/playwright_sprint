@@ -2,7 +2,7 @@ import { expect } from "@playwright/test";
 import { ACCOUNTS, TRANSFER_DATA } from "../../config/config";
 import { test } from "../../fixtures/baseFixture";
 
-test("tc_007 ,should deduct from source and add to destination after valid transfer", async ({
+test("tc_007 ,Valid Transfer & Accounts Overview Update", async ({
   transferPage,
   overviewPage,
 }) => {

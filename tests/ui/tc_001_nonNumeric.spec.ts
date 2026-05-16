@@ -1,9 +1,7 @@
 import { expect } from "@playwright/test";
 import { test } from "../../fixtures/baseFixture";
 
-test("tc_001 ,should prevent non numeric transfer", async ({
-  transferPage,
-}) => {
+test("tc_001 ,Non-numeric Input Validation", async ({ transferPage }) => {
   test.fail(
     true,
     "KNOWN BUG: Server throws 500 internal error when there should be a UI warning",
