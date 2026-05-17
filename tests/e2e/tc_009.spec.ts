@@ -4,79 +4,82 @@ import { CONFIG, TEST_DATA, TRANSFER_DATA } from "../../config/config";
 import { test } from "../../fixtures/baseFixture";
 import { logger } from "../../utils/logger";
 
-test("tc_009 ,Balance updated on UI after an API-initiated transfer", async ({
-  overviewPage,
-  request,
-}) => {
-  let fromBalanceBefore: number;
-  let toBalanceBefore: number;
-  const accountInfo = TEST_DATA.tc009_e2e;
+test(
+  "tc_009 ,Balance updated on UI after an API-initiated transfer",
+  {
+    tag: ["@e2e", "@api", "@regression"],
+  },
+  async ({ overviewPage, request }) => {
+    let fromBalanceBefore: number;
+    let toBalanceBefore: number;
+    const accountInfo = TEST_DATA.tc009_e2e;
 
-  await test.step("Capture balances on the UI BEFORE transfer", async () => {
-    logger.info(
-      "Navigating to Overview Page to capture initial UI balances...",
-    );
-    await overviewPage.goto();
+    await test.step("Capture balances on the UI BEFORE transfer", async () => {
+      logger.info(
+        "Navigating to Overview Page to capture initial UI balances...",
+      );
+      await overviewPage.goto();
 
-    fromBalanceBefore = await overviewPage.getBalance(accountInfo.from);
-    toBalanceBefore = await overviewPage.getBalance(accountInfo.to);
+      fromBalanceBefore = await overviewPage.getBalance(accountInfo.from);
+      toBalanceBefore = await overviewPage.getBalance(accountInfo.to);
 
-    logger.info("Initial UI Balances", {
-      from: fromBalanceBefore,
-      to: toBalanceBefore,
+      logger.info("Initial UI Balances", {
+        from: fromBalanceBefore,
+        to: toBalanceBefore,
+      });
+
+      await overviewPage.page.screenshot({
+        path: `test-results/screenshots/TC_009-overview-before.png`,
+        fullPage: true,
+      });
     });
 
-    await overviewPage.page.screenshot({
-      path: `test-results/screenshots/TC_009-overview-before.png`,
-      fullPage: true,
-    });
-  });
+    await test.step("Execute transfer via API", async () => {
+      const url = `${CONFIG.API_BASE}/transfer`;
+      const params = {
+        fromAccountId: accountInfo.from,
+        toAccountId: accountInfo.to,
+        amount: String(TRANSFER_DATA.e2eTransfer),
+      };
 
-  await test.step("Execute transfer via API", async () => {
-    const url = `${CONFIG.API_BASE}/transfer`;
-    const params = {
-      fromAccountId: accountInfo.from,
-      toAccountId: accountInfo.to,
-      amount: String(TRANSFER_DATA.e2eTransfer),
-    };
+      logger.apiRequest("POST", url, params);
 
-    logger.apiRequest("POST", url, params);
+      const transferResponse = await request.post(url, { params });
 
-    const transferResponse = await request.post(url, { params });
+      logger.apiResponse(
+        transferResponse.status(),
+        transferResponse.url(),
+        await transferResponse.text(),
+      );
 
-    logger.apiResponse(
-      transferResponse.status(),
-      transferResponse.url(),
-      await transferResponse.text(),
-    );
-
-    expect(transferResponse.status()).toBe(200);
-  });
-
-  await test.step("Reload UI and verify balances updated", async () => {
-    logger.info("Reloading Overview Page to check updated UI balances...");
-    await overviewPage.goto();
-
-    await overviewPage.page.screenshot({
-      path: `test-results/screenshots/TC_009-overview-after.png`,
-      fullPage: true,
+      expect(transferResponse.status()).toBe(200);
     });
 
-    const fromBalanceAfter = await overviewPage.getBalance(accountInfo.from);
-    const toBalanceAfter = await overviewPage.getBalance(accountInfo.to);
+    await test.step("Reload UI and verify balances updated", async () => {
+      logger.info("Reloading Overview Page to check updated UI balances...");
+      await overviewPage.goto();
 
-    logger.info("Updated UI Balances", {
-      from: fromBalanceAfter,
-      to: toBalanceAfter,
+      await overviewPage.page.screenshot({
+        path: `test-results/screenshots/TC_009-overview-after.png`,
+        fullPage: true,
+      });
+
+      const fromBalanceAfter = await overviewPage.getBalance(accountInfo.from);
+      const toBalanceAfter = await overviewPage.getBalance(accountInfo.to);
+
+      logger.info("Updated UI Balances", {
+        from: fromBalanceAfter,
+        to: toBalanceAfter,
+      });
+
+      expect(fromBalanceAfter).toBeCloseTo(
+        fromBalanceBefore - TRANSFER_DATA.e2eTransferNum,
+        2,
+      );
+      expect(toBalanceAfter).toBeCloseTo(
+        toBalanceBefore + TRANSFER_DATA.e2eTransferNum,
+        2,
+      );
     });
-
-    expect(fromBalanceAfter).toBeCloseTo(
-      fromBalanceBefore - TRANSFER_DATA.e2eTransferNum,
-      2,
-    );
-    expect(toBalanceAfter).toBeCloseTo(
-      toBalanceBefore + TRANSFER_DATA.e2eTransferNum,
-      2,
-    );
-  });
-});
+  },
+);
