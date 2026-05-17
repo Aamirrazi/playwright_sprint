@@ -1,6 +1,8 @@
 import testData from "../test-data/transferData.json";
 
 const LOCAL = "http://localhost:9090";
+const GLOBAL = "https://parabank.parasoft.com";
+
 export const CONFIG = {
   BASE_URL: LOCAL,
   API_BASE: `${LOCAL}/parabank/services/bank`,
