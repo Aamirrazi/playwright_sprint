@@ -14,7 +14,7 @@ import { CONFIG } from "./config/config";
  */
 export default defineConfig({
   testDir: "./tests",
-  outputDir: "test-results",
+  outputDir: "test-results/",
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -25,15 +25,9 @@ export default defineConfig({
   workers: process.env.CI ? 5 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
-    ["html"],
-    [
-      "allure-playwright",
-      {
-        detail: true,
-        outputFolder: "allure-results",
-        suiteTitle: false,
-      },
-    ],
+    ["html", { open: "never", outputFolder: "playwright-report" }],
+    ["allure-playwright", { detail: true, outputFolder: "allure-results" }],
+    ["list"],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
@@ -41,7 +35,9 @@ export default defineConfig({
     baseURL: CONFIG.BASE_URL,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: "on-first-retry",
+    trace: "retain-on-failure",
+    screenshot: "only-on-failure",
+    video: "retain-on-failure",
   },
 
   /* Configure projects for major browsers */
