@@ -1,0 +1,2 @@
+Starting balance: -2520
+After balance: -2820

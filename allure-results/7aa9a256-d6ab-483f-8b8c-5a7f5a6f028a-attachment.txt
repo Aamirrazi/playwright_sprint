@@ -1,0 +1,10 @@
+[8:40:00 pm] [INFO] Starting TC_003: Same Account Transfer test
+[8:40:00 pm] [INFO] Navigating to Transfer Page...
+[8:40:03 pm] [INFO] Attempting to transfer 10.00 from 13344 to 13344
+[8:40:04 pm] [INFO] Extracting body text to verify error messages...
+[8:40:04 pm] [INFO] Validation Checks
+{
+  "transferCompleted": true,
+  "errorShown": true
+}
+[8:40:04 pm] [INFO] TC_003: Completed successfully

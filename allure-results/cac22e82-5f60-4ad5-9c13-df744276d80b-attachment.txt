@@ -1,0 +1,2 @@
+TC_007: Before — From: 250, To: 950
+TC_007: Transfer Complete message confirmed

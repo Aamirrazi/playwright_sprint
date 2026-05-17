@@ -1,0 +1,3 @@
+TC_007: Before — From: 80, To: 1120
+TC_007: Transfer Complete message confirmed
+TC_007: Passed — balances correctly updated

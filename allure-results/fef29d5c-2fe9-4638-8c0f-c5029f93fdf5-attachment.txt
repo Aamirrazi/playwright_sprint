@@ -1,0 +1,46 @@
+[8:36:57 pm] [INFO] Navigating to Overview Page to read initial UI balances...
+[8:36:58 pm] [INFO] Initial UI Balances
+{
+  "from": -90,
+  "to": 1290
+}
+[8:36:58 pm] [API-REQ] GET http://localhost:9090/parabank/services/bank/accounts/13122
+[8:36:58 pm] [API-REQ] GET http://localhost:9090/parabank/services/bank/accounts/13233
+[8:36:58 pm] [API-RES] Status: 200 from http://localhost:9090/parabank/services/bank/accounts/13122
+{
+  "id": 13122,
+  "customerId": 12212,
+  "type": "CHECKING",
+  "balance": -90
+}
+[8:36:58 pm] [API-RES] Status: 200 from http://localhost:9090/parabank/services/bank/accounts/13233
+{
+  "id": 13233,
+  "customerId": 12212,
+  "type": "CHECKING",
+  "balance": 1290
+}
+[8:36:58 pm] [INFO] Navigating to Transfer Page to perform UI transfer...
+[8:36:59 pm] [INFO] Transferring 20 from 13122 to 13233 via UI
+[8:37:00 pm] [INFO] Returning to Overview Page to verify updated UI balances...
+[8:37:01 pm] [INFO] Updated UI Balances
+{
+  "from": -110,
+  "to": 1310
+}
+[8:37:01 pm] [API-REQ] GET http://localhost:9090/parabank/services/bank/accounts/13122
+[8:37:01 pm] [API-REQ] GET http://localhost:9090/parabank/services/bank/accounts/13233
+[8:37:01 pm] [API-RES] Status: 200 from http://localhost:9090/parabank/services/bank/accounts/13122
+{
+  "id": 13122,
+  "customerId": 12212,
+  "type": "CHECKING",
+  "balance": -110
+}
+[8:37:01 pm] [API-RES] Status: 200 from http://localhost:9090/parabank/services/bank/accounts/13233
+{
+  "id": 13233,
+  "customerId": 12212,
+  "type": "CHECKING",
+  "balance": 1310
+}

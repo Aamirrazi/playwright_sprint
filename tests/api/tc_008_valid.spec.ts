@@ -1,19 +1,23 @@
 import { expect } from "@playwright/test";
-import { ACCOUNTS, CONFIG, TRANSFER_DATA } from "../../config/config";
+import { CONFIG, TEST_DATA, TRANSFER_DATA } from "../../config/config";
 import { apiTest as test } from "../../fixtures/apiFixture";
+import { logger } from "../../utils/logger";
 
 test("tc_008 ,Valid API Transfer & GET Account Sync", async ({
   apiRequest,
 }) => {
   let fromBalanceBefore: number;
   let toBalanceBefore: number;
+  const accountData = TEST_DATA.tc008_apiValid;
 
   await test.step("Check initial balance", async () => {
+    logger.info("Fetching initial balances for API transfer...");
+
     const fromBefore = await apiRequest.get(
-      `${CONFIG.API_BASE}/accounts/${ACCOUNTS.API_TRANSFER_FROM}`,
+      `${CONFIG.API_BASE}/accounts/${accountData.from}`,
     );
     const toBefore = await apiRequest.get(
-      `${CONFIG.API_BASE}/accounts/${ACCOUNTS.API_TRANSFER_TO}`,
+      `${CONFIG.API_BASE}/accounts/${accountData.to}`,
     );
 
     expect(fromBefore.status(), "From Account API should return 200").toBe(200);
@@ -24,26 +28,42 @@ test("tc_008 ,Valid API Transfer & GET Account Sync", async ({
 
     fromBalanceBefore = fromBody.balance;
     toBalanceBefore = toBody.balance;
+
+    logger.info("Initial Balances", {
+      from: fromBalanceBefore,
+      to: toBalanceBefore,
+    });
   });
 
   await test.step("Perform API transfer", async () => {
-    const transferResp = await apiRequest.post(`${CONFIG.API_BASE}/transfer`, {
-      params: {
-        fromAccountId: ACCOUNTS.API_TRANSFER_FROM,
-        toAccountId: ACCOUNTS.API_TRANSFER_TO,
-        amount: String(TRANSFER_DATA.apiTransferAmount),
-      },
-    });
+    const url = `${CONFIG.API_BASE}/transfer`;
+    const params = {
+      fromAccountId: accountData.from,
+      toAccountId: accountData.to,
+      amount: String(TRANSFER_DATA.validTransferNum),
+    };
+
+    logger.apiRequest("POST", url, params);
+
+    const transferResp = await apiRequest.post(url, { params });
+
+    logger.apiResponse(
+      transferResp.status(),
+      transferResp.url(),
+      await transferResp.text(),
+    );
 
     expect(transferResp.status(), "Transfer API should return 200").toBe(200);
   });
 
   await test.step("Check balances after transfer", async () => {
+    logger.info("Fetching balances after transfer...");
+
     const fromAfter = await apiRequest.get(
-      `${CONFIG.API_BASE}/accounts/${ACCOUNTS.API_TRANSFER_FROM}`,
+      `${CONFIG.API_BASE}/accounts/${accountData.from}`,
     );
     const toAfter = await apiRequest.get(
-      `${CONFIG.API_BASE}/accounts/${ACCOUNTS.API_TRANSFER_TO}`,
+      `${CONFIG.API_BASE}/accounts/${accountData.to}`,
     );
 
     const fromBodyAfter = await fromAfter.json();
@@ -52,12 +72,17 @@ test("tc_008 ,Valid API Transfer & GET Account Sync", async ({
     const fromBalanceAfter = fromBodyAfter.balance;
     const toBalanceAfter = toBodyAfter.balance;
 
+    logger.info("Final Balances", {
+      from: fromBalanceAfter,
+      to: toBalanceAfter,
+    });
+
     expect(fromBalanceAfter).toBeCloseTo(
-      fromBalanceBefore - TRANSFER_DATA.apiTransferAmount,
+      fromBalanceBefore - TRANSFER_DATA.validTransferNum,
       2,
     );
     expect(toBalanceAfter).toBeCloseTo(
-      toBalanceBefore + TRANSFER_DATA.apiTransferAmount,
+      toBalanceBefore + TRANSFER_DATA.validTransferNum,
       2,
     );
   });

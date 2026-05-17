@@ -1,0 +1,38 @@
+{
+  "accounts": {
+    "tc003_same": {
+      "from": "13344",
+      "to": "13344"
+    },
+    "tc004_overdraft": {
+      "from": "12456",
+      "to": "13011"
+    },
+    "tc005_balanceCheck": {
+      "account": "12567"
+    },
+    "tc007_uiValid": {
+      "from": "13122",
+      "to": "13233"
+    },
+    "tc008_apiValid": {
+      "from": "12678",
+      "to": "13011"
+    },
+    "tc009_e2e": {
+      "from": "54321",
+      "to": "13344"
+    }
+  },
+  "amounts": {
+    "nonNumeric": "abc",
+    "negative": -10,
+    "sameAccount": "10.00",
+    "overdraft": "300.00",
+    "validTransfer": "50",
+    "validTransferNum": 50,
+    "apiTransfer": 50,
+    "e2eTransfer": 20,
+    "e2eTransferNum": 20
+  }
+}

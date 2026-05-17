@@ -1,34 +1,45 @@
 import { expect } from "@playwright/test";
-import { ACCOUNTS, TRANSFER_DATA } from "../../config/config";
+import { TEST_DATA, TRANSFER_DATA } from "../../config/config";
 import { test } from "../../fixtures/baseFixture";
+import { logger } from "../../utils/logger";
 
 test("tc_007 ,Valid Transfer & Accounts Overview Update", async ({
   transferPage,
   overviewPage,
 }) => {
+  logger.info("Starting TC_007: Valid Transfer & Accounts Overview Update");
   let fromBefore: number;
   let toBefore: number;
+  const accountData = TEST_DATA.tc007_uiValid;
 
   await test.step("Check initial balances", async () => {
+    logger.info("Navigating to Overview Page...");
     await overviewPage.goto();
-    fromBefore = await overviewPage.getBalance(ACCOUNTS.UI_TRANSFER_FROM);
-    toBefore = await overviewPage.getBalance(ACCOUNTS.UI_TRANSFER_TO);
-    console.log(`TC_007: Before — From: ${fromBefore}, To: ${toBefore}`);
+    fromBefore = await overviewPage.getBalance(accountData.from);
+    toBefore = await overviewPage.getBalance(accountData.to);
+    // console.log(`TC_007: Before — From: ${fromBefore}, To: ${toBefore}`);
+    logger.info(`Before — From: ${fromBefore}, To: ${toBefore}`);
   });
 
   await test.step("Perform valid transfer", async () => {
+    logger.info("Navigating to Transfer Page...");
     await transferPage.goto();
+    logger.info(
+      `Transferring ${TRANSFER_DATA.validTransfer} from ${accountData.from} to ${accountData.to}`,
+    );
     await transferPage.transfer(
-      ACCOUNTS.UI_TRANSFER_FROM,
-      ACCOUNTS.UI_TRANSFER_TO,
-      TRANSFER_DATA.validTransferAmount,
+      accountData.from,
+      accountData.to,
+      TRANSFER_DATA.validTransfer,
     );
   });
 
   await test.step("Verify transfer success and balance updates", async () => {
     await transferPage.assertTransferSuccess();
-    console.log("TC_007: Transfer Complete message confirmed");
+    logger.info("Transfer Complete message confirmed");
+    // console.log("TC_007: Transfer Complete message confirmed");
 
+    logger.info("Navigating back to Overview Page to verify balances...");
     await overviewPage.goto();
 
     await transferPage.page.screenshot({
@@ -37,17 +48,17 @@ test("tc_007 ,Valid Transfer & Accounts Overview Update", async ({
     });
 
     await overviewPage.assertBalanceDecreasedBy(
-      ACCOUNTS.UI_TRANSFER_FROM,
+      accountData.from,
       fromBefore,
-      TRANSFER_DATA.validTransferAmountNum,
+      TRANSFER_DATA.validTransferNum,
     );
 
     await overviewPage.assertBalanceIncreasedBy(
-      ACCOUNTS.UI_TRANSFER_TO,
+      accountData.to,
       toBefore,
-      TRANSFER_DATA.validTransferAmountNum,
+      TRANSFER_DATA.validTransferNum,
     );
-
-    console.log("TC_007: Passed — balances correctly updated");
+    logger.info("TC_007: Passed — balances correctly updated");
+    // console.log("TC_007: Passed — balances correctly updated");
   });
 });

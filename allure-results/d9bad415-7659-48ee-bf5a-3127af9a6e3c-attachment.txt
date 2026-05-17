@@ -1,0 +1,8 @@
+[8:36:56 pm] [API-REQ] POST http://localhost:9090/parabank/services/bank/transfer
+{
+  "fromAccountId": "12456",
+  "toAccountId": "13011",
+  "amount": "-10"
+}
+[8:36:58 pm] [API-RES] Status: 200 from http://localhost:9090/parabank/services/bank/transfer?fromAccountId=12456&toAccountId=13011&amount=-10
+"Successfully transferred $-10 from account #12456 to account #13011"

@@ -1,6 +1,8 @@
 import { expect } from "@playwright/test";
-import { ACCOUNTS, CONFIG, TRANSFER_DATA } from "../../config/config";
+// import { ACCOUNTS, CONFIG, TRANSFER_DATA } from "../../config/config";
+import { CONFIG, TEST_DATA, TRANSFER_DATA } from "../../config/config";
 import { test } from "../../fixtures/baseFixture";
+import { logger } from "../../utils/logger";
 
 test("tc_009 ,Balance updated on UI after an API-initiated transfer", async ({
   overviewPage,
@@ -8,13 +10,21 @@ test("tc_009 ,Balance updated on UI after an API-initiated transfer", async ({
 }) => {
   let fromBalanceBefore: number;
   let toBalanceBefore: number;
+  const accountInfo = TEST_DATA.tc009_e2e;
 
   await test.step("Capture balances on the UI BEFORE transfer", async () => {
-    await overviewPage.goto();
-    fromBalanceBefore = await overviewPage.getBalance(
-      ACCOUNTS.E2E_TRANSFER_FROM,
+    logger.info(
+      "Navigating to Overview Page to capture initial UI balances...",
     );
-    toBalanceBefore = await overviewPage.getBalance(ACCOUNTS.E2E_TRANSFER_TO);
+    await overviewPage.goto();
+
+    fromBalanceBefore = await overviewPage.getBalance(accountInfo.from);
+    toBalanceBefore = await overviewPage.getBalance(accountInfo.to);
+
+    logger.info("Initial UI Balances", {
+      from: fromBalanceBefore,
+      to: toBalanceBefore,
+    });
 
     await overviewPage.page.screenshot({
       path: `test-results/screenshots/TC_009-overview-before.png`,
@@ -23,18 +33,28 @@ test("tc_009 ,Balance updated on UI after an API-initiated transfer", async ({
   });
 
   await test.step("Execute transfer via API", async () => {
-    const transferResponse = await request.post(`${CONFIG.API_BASE}/transfer`, {
-      params: {
-        fromAccountId: ACCOUNTS.E2E_TRANSFER_FROM,
-        toAccountId: ACCOUNTS.E2E_TRANSFER_TO,
-        amount: String(TRANSFER_DATA.e2eTransferAmount),
-      },
-    });
+    const url = `${CONFIG.API_BASE}/transfer`;
+    const params = {
+      fromAccountId: accountInfo.from,
+      toAccountId: accountInfo.to,
+      amount: String(TRANSFER_DATA.e2eTransfer),
+    };
+
+    logger.apiRequest("POST", url, params);
+
+    const transferResponse = await request.post(url, { params });
+
+    logger.apiResponse(
+      transferResponse.status(),
+      transferResponse.url(),
+      await transferResponse.text(),
+    );
 
     expect(transferResponse.status()).toBe(200);
   });
 
   await test.step("Reload UI and verify balances updated", async () => {
+    logger.info("Reloading Overview Page to check updated UI balances...");
     await overviewPage.goto();
 
     await overviewPage.page.screenshot({
@@ -42,19 +62,20 @@ test("tc_009 ,Balance updated on UI after an API-initiated transfer", async ({
       fullPage: true,
     });
 
-    const fromBalanceAfter = await overviewPage.getBalance(
-      ACCOUNTS.E2E_TRANSFER_FROM,
-    );
-    const toBalanceAfter = await overviewPage.getBalance(
-      ACCOUNTS.E2E_TRANSFER_TO,
-    );
+    const fromBalanceAfter = await overviewPage.getBalance(accountInfo.from);
+    const toBalanceAfter = await overviewPage.getBalance(accountInfo.to);
+
+    logger.info("Updated UI Balances", {
+      from: fromBalanceAfter,
+      to: toBalanceAfter,
+    });
 
     expect(fromBalanceAfter).toBeCloseTo(
-      fromBalanceBefore - TRANSFER_DATA.e2eTransferAmountNum,
+      fromBalanceBefore - TRANSFER_DATA.e2eTransferNum,
       2,
     );
     expect(toBalanceAfter).toBeCloseTo(
-      toBalanceBefore + TRANSFER_DATA.e2eTransferAmountNum,
+      toBalanceBefore + TRANSFER_DATA.e2eTransferNum,
       2,
     );
   });
