@@ -1,4 +1,0 @@
-[INFO - 6:25:04 pm] TC-007 started
-[INFO - 6:25:05 pm] Before — From: -40, To: 1240
-[INFO - 6:25:06 pm] transfer done
-[INFO - 6:25:06 pm] TC-007:Passed

@@ -1,8 +1,0 @@
-[12:22:31 am] [API-REQ] GET http://localhost:9090/parabank/services/bank/accounts/12567
-[12:22:32 am] [API-RES] Status: 200 from http://localhost:9090/parabank/services/bank/accounts/12567
-{
-  "id": 12567,
-  "customerId": 12212,
-  "type": "CHECKING",
-  "balance": -3100
-}

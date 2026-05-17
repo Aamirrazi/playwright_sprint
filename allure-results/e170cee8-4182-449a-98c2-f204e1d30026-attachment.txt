@@ -1,2 +1,0 @@
-Status: 200
-Body: {"id":12567,"customerId":12212,"type":"CHECKING","balance":-3110}

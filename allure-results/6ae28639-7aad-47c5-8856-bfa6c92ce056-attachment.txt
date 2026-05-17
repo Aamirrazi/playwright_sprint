@@ -1,2 +1,0 @@
-Status: 200
-Body: Successfully transferred $-10 from account #12567 to account #13011
