@@ -1,0 +1,20 @@
+[12:22:40 am] [INFO] Fetching initial balances for API transfer...
+[12:22:40 am] [INFO] Initial Balances
+{
+  "from": -400,
+  "to": 6100
+}
+[12:22:40 am] [API-REQ] POST http://localhost:9090/parabank/services/bank/transfer
+{
+  "fromAccountId": "12678",
+  "toAccountId": "13011",
+  "amount": "50"
+}
+[12:22:41 am] [API-RES] Status: 200 from http://localhost:9090/parabank/services/bank/transfer?fromAccountId=12678&toAccountId=13011&amount=50
+"Successfully transferred $50 from account #12678 to account #13011"
+[12:22:41 am] [INFO] Fetching balances after transfer...
+[12:22:41 am] [INFO] Final Balances
+{
+  "from": -450,
+  "to": 6150
+}

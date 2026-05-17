@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 
-const logDirectory = path.join(process.cwd(), "test-results");
+const logDirectory = path.join(process.cwd(), "test-results", "logs");
 const logFilePath = path.join(logDirectory, "execution.log");
 
 if (!fs.existsSync(logDirectory)) {

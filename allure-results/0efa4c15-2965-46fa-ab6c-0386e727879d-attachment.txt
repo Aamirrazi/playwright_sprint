@@ -1,0 +1,20 @@
+[12:22:32 am] [INFO] Navigating to Overview Page to capture initial UI balances...
+[12:22:33 am] [INFO] Initial UI Balances
+{
+  "from": 1091.12,
+  "to": 1491.1
+}
+[12:22:34 am] [API-REQ] POST http://localhost:9090/parabank/services/bank/transfer
+{
+  "fromAccountId": "54321",
+  "toAccountId": "13344",
+  "amount": "20"
+}
+[12:22:34 am] [API-RES] Status: 200 from http://localhost:9090/parabank/services/bank/transfer?fromAccountId=54321&toAccountId=13344&amount=20
+"Successfully transferred $20 from account #54321 to account #13344"
+[12:22:34 am] [INFO] Reloading Overview Page to check updated UI balances...
+[12:22:35 am] [INFO] Updated UI Balances
+{
+  "from": 1071.12,
+  "to": 1511.1
+}
