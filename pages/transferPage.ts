@@ -1,5 +1,6 @@
 import { Page, expect } from "@playwright/test";
 import { PATH } from "../config/config";
+import { getPageLoadTime } from "../utils/loadTimeUtils";
 
 export class TransferPage {
   readonly page: Page;
@@ -20,7 +21,6 @@ export class TransferPage {
   async goto(): Promise<void> {
     await this.page.goto(PATH.TRANSFER);
     await this.page.waitForLoadState("domcontentloaded");
-    // await this.page.waitForSelector(this.amountInput);
   }
 
   async enterAmount(amount: string): Promise<void> {
@@ -33,6 +33,11 @@ export class TransferPage {
 
   async selectToAccount(accountId: string): Promise<void> {
     await this.page.selectOption(this.toSelect, { value: accountId });
+  }
+
+  async getFromAccountOptionsCount(): Promise<number> {
+    const options = this.page.locator(`${this.fromSelect} option`);
+    return await options.count();
   }
 
   async clickTransfer(): Promise<void> {
@@ -96,5 +101,9 @@ export class TransferPage {
 
   async assertAmountFieldIsEmpty(): Promise<void> {
     await expect(this.page.locator(this.amountInput)).toHaveValue("");
+  }
+
+  async getLoadTime() {
+    return await getPageLoadTime(this.page);
   }
 }

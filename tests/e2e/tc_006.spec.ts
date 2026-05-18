@@ -14,11 +14,13 @@ test(
     let uiToBefore: number;
     let apiFromBalBefore: number;
     let apiToBalBefore: number;
-    const accountInfo = TEST_DATA.tc007_uiValid;
+    const accountInfo = TEST_DATA.tc006_e2e;
 
     await test.step("Read UI balances before", async () => {
-      logger.info("Navigating to Overview Page to read initial UI balances...");
+      logger.info("Navigating to Overview Page to read initial UI balances");
       await overviewPage.goto();
+      const loadTime = await overviewPage.getLoadTime();
+      logger.info(`Overview Page in TC-006 loaded in ${loadTime}ms`);
       uiFromBefore = await overviewPage.getBalance(accountInfo.from);
       uiToBefore = await overviewPage.getBalance(accountInfo.to);
 
@@ -56,9 +58,10 @@ test(
     });
 
     await test.step("Perform the transfer via UI", async () => {
-      logger.info("Navigating to Transfer Page to perform UI transfer...");
+      logger.info("Navigating to Transfer Page to perform UI transfer");
       await transferPage.goto();
-
+      const loadTime = await transferPage.getLoadTime();
+      logger.info(`Transfer Page in TC-006 loaded in ${loadTime}ms`);
       const amount = String(TRANSFER_DATA.e2eTransferNum);
       logger.info(
         `Transferring ${amount} from ${accountInfo.from} to ${accountInfo.to} via UI`,
@@ -74,10 +77,10 @@ test(
     });
 
     await test.step("Verify UI Overview updated", async () => {
-      logger.info(
-        "Returning to Overview Page to verify updated UI balances...",
-      );
+      logger.info("Returning to Overview Page to verify updated UI balances");
       await overviewPage.goto();
+      const loadTime = await overviewPage.getLoadTime();
+      logger.info(`Overview Page in TC-006 loaded in ${loadTime}ms`);
 
       const uiFromAfter = await overviewPage.getBalance(accountInfo.from);
       const uiToAfter = await overviewPage.getBalance(accountInfo.to);

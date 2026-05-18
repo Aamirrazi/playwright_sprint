@@ -1,5 +1,6 @@
 import { Page, expect } from "@playwright/test";
 import { CONFIG, PATH } from "../config/config";
+import { getPageLoadTime } from "../utils/loadTimeUtils";
 
 export class LoginPage {
   readonly page: Page;
@@ -43,5 +44,9 @@ export class LoginPage {
 
   async assertOnOverviewPage(): Promise<void> {
     await expect(this.page).toHaveURL(/overview\.htm/);
+  }
+
+  async getLoadTime() {
+    return await getPageLoadTime(this.page);
   }
 }

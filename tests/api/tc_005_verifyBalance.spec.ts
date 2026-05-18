@@ -2,6 +2,7 @@ import { APIResponse, expect } from "@playwright/test";
 import { CONFIG, TEST_DATA, TRANSFER_DATA } from "../../config/config";
 import { apiTest as test } from "../../fixtures/apiFixture";
 import { logger } from "../../utils/logger";
+import { validateAccount } from "../../schemas/accountSchema";
 
 test(
   "tc_005 ,Verify Balance State",
@@ -9,11 +10,6 @@ test(
     tag: ["@api", "@regression"],
   },
   async ({ apiRequest }) => {
-    test.fail(
-      true,
-      "KNOWN BUG TC_005: Account balance becomes negative after overdraft",
-    );
-
     let response: APIResponse;
     const accountData = TEST_DATA.tc005_balanceCheck;
     const url = `${CONFIG.API_BASE}/accounts/${accountData.account}`;
@@ -28,11 +24,19 @@ test(
       logger.apiResponse(response.status(), response.url(), body);
 
       expect(response.status(), "Expected 200 OK").toBe(200);
-      expect(body).toHaveProperty("balance");
+
+      const isValid = validateAccount(body);
+      if (!isValid) {
+        logger.error("Schema Validation Failed", validateAccount.errors);
+      }
+      expect(
+        isValid,
+        `Schema Errors: ${JSON.stringify(validateAccount.errors)}`,
+      ).toBe(true);
 
       expect(
         body.balance,
-        `KNOWN BUG: Expected balance >= 0, but got ${body.balance}`,
+        ` Expected balance >= 0, but got ${body.balance}`,
       ).toBeGreaterThanOrEqual(0);
     });
   },

@@ -11,6 +11,7 @@
     "tc005_balanceCheck": {
       "account": "12567"
     },
+    "tc006_e2e": { "from": "13122", "to": "13233" },
     "tc007_uiValid": {
       "from": "13122",
       "to": "13233"

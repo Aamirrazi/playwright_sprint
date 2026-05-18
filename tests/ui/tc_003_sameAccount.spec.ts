@@ -6,18 +6,17 @@ import { logger } from "../../utils/logger";
 test(
   "tc_003 ,Same Account Transfer",
   {
-    tag: ["@ui", "@regression"],
+    tag: ["@ui", "@regression", "@negative"],
   },
   async ({ transferPage }) => {
-    test.fail(true, "KNOWN BUG: App allows same-account transfers");
-
     const accountInfo = TEST_DATA.tc003_same;
     logger.info("Starting TC_003: Same Account Transfer test");
 
     await test.step("Attempt same-account transfer", async () => {
-      logger.info("Navigating to Transfer Page...");
+      logger.info("Navigating to Transfer Page");
       await transferPage.goto();
-
+      const loadTime = await transferPage.getLoadTime();
+      logger.info(`Transfer Page in TC-003 loaded in ${loadTime}ms`);
       logger.info(
         `Attempting to transfer ${TRANSFER_DATA.sameAccount} from ${accountInfo.from} to ${accountInfo.to}`,
       );

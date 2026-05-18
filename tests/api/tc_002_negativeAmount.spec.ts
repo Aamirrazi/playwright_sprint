@@ -6,11 +6,9 @@ import { logger } from "../../utils/logger";
 test(
   "tc_002 ,should return 400 for negative amount",
   {
-    tag: ["@api", "@regression"],
+    tag: ["@api", "@regression", "@negative"],
   },
   async ({ apiRequest }) => {
-    test.fail(true, "KNOWN BUG TC_002: Api Accept negative amount");
-
     let response: APIResponse;
     const accountData = TEST_DATA.tc004_overdraft;
 

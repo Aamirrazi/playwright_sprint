@@ -15,8 +15,10 @@ test(
     const accountData = TEST_DATA.tc007_uiValid;
 
     await test.step("Check initial balances", async () => {
-      logger.info("Navigating to Overview Page...");
+      logger.info("Navigating to Overview Page");
       await overviewPage.goto();
+      const loadTime = await overviewPage.getLoadTime();
+      logger.info(`Overview Page in TC-007 loaded in ${loadTime}ms`);
       fromBefore = await overviewPage.getBalance(accountData.from);
       toBefore = await overviewPage.getBalance(accountData.to);
       // console.log(`TC_007: Before — From: ${fromBefore}, To: ${toBefore}`);
@@ -24,8 +26,10 @@ test(
     });
 
     await test.step("Perform valid transfer", async () => {
-      logger.info("Navigating to Transfer Page...");
+      logger.info("Navigating to Transfer Page");
       await transferPage.goto();
+      const loadTime = await transferPage.getLoadTime();
+      logger.info(`Transfer Page in TC-007 loaded in ${loadTime}ms`);
       logger.info(
         `Transferring ${TRANSFER_DATA.validTransfer} from ${accountData.from} to ${accountData.to}`,
       );
@@ -41,8 +45,10 @@ test(
       logger.info("Transfer Complete message confirmed");
       // console.log("TC_007: Transfer Complete message confirmed");
 
-      logger.info("Navigating back to Overview Page to verify balances...");
+      logger.info("Navigating back to Overview Page to verify balances");
       await overviewPage.goto();
+      const loadTime = await overviewPage.getLoadTime();
+      logger.info(`Overview Page in TC-007 againloaded in ${loadTime}ms`);
 
       await transferPage.page.screenshot({
         path: `test-results/screenshots/TC_007-overview-after.png`,

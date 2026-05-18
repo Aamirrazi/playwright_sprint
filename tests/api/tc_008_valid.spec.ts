@@ -2,6 +2,7 @@ import { expect } from "@playwright/test";
 import { CONFIG, TEST_DATA, TRANSFER_DATA } from "../../config/config";
 import { apiTest as test } from "../../fixtures/apiFixture";
 import { logger } from "../../utils/logger";
+import { validateAccount } from "../../schemas/accountSchema";
 
 test(
   "tc_008 ,Valid API Transfer & GET Account Sync",
@@ -14,7 +15,7 @@ test(
     const accountData = TEST_DATA.tc008_apiValid;
 
     await test.step("Check initial balance", async () => {
-      logger.info("Fetching initial balances for API transfer...");
+      logger.info("Fetching initial balances for API transfer");
 
       const fromBefore = await apiRequest.get(
         `${CONFIG.API_BASE}/accounts/${accountData.from}`,
@@ -30,6 +31,25 @@ test(
 
       const fromBody = await fromBefore.json();
       const toBody = await toBefore.json();
+
+      const isFromValid = validateAccount(fromBody);
+      const isToValid = validateAccount(toBody);
+
+      if (!isFromValid || !isToValid) {
+        logger.error(
+          "Schema Validation Failed in Initial Balance",
+          validateAccount.errors,
+        );
+      }
+
+      expect(
+        isFromValid,
+        `From Account Schema Errors: ${JSON.stringify(validateAccount.errors)}`,
+      ).toBe(true);
+      expect(
+        isToValid,
+        `To Account Schema Errors: ${JSON.stringify(validateAccount.errors)}`,
+      ).toBe(true);
 
       fromBalanceBefore = fromBody.balance;
       toBalanceBefore = toBody.balance;
@@ -62,7 +82,7 @@ test(
     });
 
     await test.step("Check balances after transfer", async () => {
-      logger.info("Fetching balances after transfer...");
+      logger.info("Fetching balances after transfer");
 
       const fromAfter = await apiRequest.get(
         `${CONFIG.API_BASE}/accounts/${accountData.from}`,
@@ -73,6 +93,18 @@ test(
 
       const fromBodyAfter = await fromAfter.json();
       const toBodyAfter = await toAfter.json();
+
+      const isFromAfterValid = validateAccount(fromBodyAfter);
+      const isToAfterValid = validateAccount(toBodyAfter);
+
+      expect(
+        isFromAfterValid,
+        `From Account After Schema Errors: ${JSON.stringify(validateAccount.errors)}`,
+      ).toBe(true);
+      expect(
+        isToAfterValid,
+        `To Account After Schema Errors: ${JSON.stringify(validateAccount.errors)}`,
+      ).toBe(true);
 
       const fromBalanceAfter = fromBodyAfter.balance;
       const toBalanceAfter = toBodyAfter.balance;

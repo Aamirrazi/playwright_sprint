@@ -6,24 +6,22 @@ import { logger } from "../../utils/logger";
 test(
   "tc_001 ,Non-numeric Input Validation",
   {
-    tag: ["@ui", "@regression"],
+    tag: ["@ui", "@regression", "@negative"],
   },
   async ({ transferPage }) => {
-    test.fail(
-      true,
-      "KNOWN BUG: Server throws 500 internal error when there should be a UI warning",
-    );
-
     logger.info("Starting TC_001: Non-numeric Input Validation test");
 
     await test.step("Verify account options exist", async () => {
-      logger.info("Locating account dropdown options...");
-      const fromOptions = transferPage.page.locator("#fromAccountId option");
-      await expect(fromOptions).not.toHaveCount(0);
+      logger.info("Locating account dropdown options");
+      await transferPage.goto();
 
-      const optionsArray = await fromOptions.all();
-      logger.info(`Found ${optionsArray.length} account options in dropdown`);
-      expect(optionsArray.length).toBeGreaterThan(0);
+      const loadTime = await transferPage.getLoadTime();
+      logger.info(`Transfer Page in TC-001 loaded in ${loadTime}ms`);
+
+      const optionsCount = await transferPage.getFromAccountOptionsCount();
+      logger.info(`Found ${optionsCount} account options in dropdown`);
+
+      expect(optionsCount).toBeGreaterThan(0);
     });
 
     await test.step("Attempt non-numeric transfer", async () => {
@@ -40,7 +38,7 @@ test(
     });
 
     await test.step("Verify failure messages", async () => {
-      logger.info("Extracting body text to verify error messages...");
+      logger.info("Extracting body text to verify error messages");
       const bodyText = await transferPage.getBodyText();
 
       const hasValidationError =
@@ -63,7 +61,7 @@ test(
 
       expect(
         hasServerError,
-        `KNOWN BUG: server error should not be for input mistakes`,
+        ` server error should not be for input mistakes`,
       ).toBe(false);
 
       logger.info("TC_001: Completed successfully");

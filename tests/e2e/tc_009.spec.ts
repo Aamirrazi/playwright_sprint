@@ -16,9 +16,11 @@ test(
 
     await test.step("Capture balances on the UI BEFORE transfer", async () => {
       logger.info(
-        "Navigating to Overview Page to capture initial UI balances...",
+        "Navigating to Overview Page to capture initial UI balances",
       );
       await overviewPage.goto();
+      const loadTime = await overviewPage.getLoadTime();
+      logger.info(`Overview Page in TC-009 loaded in ${loadTime}ms`);
 
       fromBalanceBefore = await overviewPage.getBalance(accountInfo.from);
       toBalanceBefore = await overviewPage.getBalance(accountInfo.to);
@@ -56,8 +58,10 @@ test(
     });
 
     await test.step("Reload UI and verify balances updated", async () => {
-      logger.info("Reloading Overview Page to check updated UI balances...");
+      logger.info("Reloading Overview Page to check updated UI balances");
       await overviewPage.goto();
+      const loadTime = await overviewPage.getLoadTime();
+      logger.info(`Overview Page in TC-009 loaded in ${loadTime}ms`);
 
       await overviewPage.page.screenshot({
         path: `test-results/screenshots/TC_009-overview-after.png`,

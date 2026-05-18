@@ -7,10 +7,9 @@ import { logger } from "../../utils/logger";
 test(
   "tc_004 ,Exceed Available Balance (Overdraft)",
   {
-    tag: ["@ui", "@regression"],
+    tag: ["@ui", "@regression", "@negative"],
   },
   async ({ transferPage, overviewPage }) => {
-    test.fail(true, "KNOWN BUG: App allows excess balance transfers ");
     logger.info("Starting TC_004: Exceed Available Balance (Overdraft)");
 
     let balanceBefore: number;
@@ -19,14 +18,18 @@ test(
     await test.step("Check initial balance", async () => {
       logger.info("Navigating to Overview Page...");
       await overviewPage.goto();
+      const loadTime = await overviewPage.getLoadTime();
+      logger.info(`Overview Page in TC-004 loaded in ${loadTime}ms`);
       balanceBefore = await overviewPage.getBalance(accountInfo.from);
       logger.info(`Starting balance: ${balanceBefore}`);
       // console.log(`Starting balance: ${balanceBefore}`);
     });
 
     await test.step("Attempt overdraft transfer", async () => {
-      logger.info("Navigating to Transfer Page...");
+      logger.info("Navigating to Transfer Page");
       await transferPage.goto();
+      const loadTime = await transferPage.getLoadTime();
+      logger.info(`Transfer Page in TC-004 loaded in ${loadTime}ms`);
       logger.info(
         `Attempting overdraft transfer of ${TRANSFER_DATA.overdraft} from ${accountInfo.from} to ${accountInfo.to}`,
       );
