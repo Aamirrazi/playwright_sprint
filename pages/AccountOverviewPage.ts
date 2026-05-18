@@ -5,10 +5,7 @@ import { getPageLoadTime } from "../utils/loadTimeUtils";
 
 export class AccountsOverviewPage {
   readonly page: Page;
-
   private readonly overviewTable = "#accountTable";
-  private readonly accountRows = "#accountTable tbody tr";
-
   constructor(page: Page) {
     this.page = page;
   }
