@@ -7,7 +7,7 @@ import { logger } from "../../utils/logger";
 test(
   "tc_004 ,Exceed Available Balance (Overdraft)",
   {
-    tag: ["@ui", "@regression", "@negative"],
+    tag: ["@ui", "@negative"],
   },
   async ({ transferPage, overviewPage }) => {
     logger.info("Starting TC_004: Exceed Available Balance (Overdraft)");
@@ -16,7 +16,7 @@ test(
     const accountInfo = TEST_DATA.tc004_overdraft;
 
     await test.step("Check initial balance", async () => {
-      logger.info("Navigating to Overview Page...");
+      logger.info("Navigating to Overview Page");
       await overviewPage.goto();
       const loadTime = await overviewPage.getLoadTime();
       logger.info(`Overview Page in TC-004 loaded in ${loadTime}ms`);
@@ -45,13 +45,13 @@ test(
     });
 
     await test.step("Verify failure messages", async () => {
-      logger.info("Navigating back to Overview Page to verify balance...");
+      logger.info("Navigating back to Overview Page to verify balance");
       await overviewPage.goto();
       const balanceAfter = await overviewPage.getBalance(accountInfo.from);
       logger.info(`After balance: ${balanceAfter}`);
       // console.log(`After balance: ${balanceAfter}`);
 
-      logger.info("Extracting body text to verify error messages...");
+      logger.info("Extracting body text to verify error messages");
       const bodyText = await transferPage.getBodyText();
 
       expect.soft(bodyText.includes("Transfer Complete")).toBe(false);

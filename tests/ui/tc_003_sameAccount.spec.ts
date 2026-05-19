@@ -6,7 +6,7 @@ import { logger } from "../../utils/logger";
 test(
   "tc_003 ,Same Account Transfer",
   {
-    tag: ["@ui", "@regression", "@negative"],
+    tag: ["@ui", "@negative"],
   },
   async ({ transferPage }) => {
     const accountInfo = TEST_DATA.tc003_same;
@@ -33,7 +33,7 @@ test(
     });
 
     await test.step("Verify failure messages", async () => {
-      logger.info("Extracting body text to verify error messages...");
+      logger.info("Extracting body text to verify error messages");
       const bodyText = await transferPage.getBodyText();
 
       const transferCompleted = bodyText.includes("Transfer Complete");

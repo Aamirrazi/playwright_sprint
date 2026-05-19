@@ -7,7 +7,7 @@ import { logger } from "../../utils/logger";
 test(
   "tc_009 ,Balance updated on UI after an API-initiated transfer",
   {
-    tag: ["@e2e", "@api", "@regression"],
+    tag: ["@e2e"],
   },
   async ({ overviewPage, request }) => {
     let fromBalanceBefore: number;
@@ -15,9 +15,7 @@ test(
     const accountInfo = TEST_DATA.tc009_e2e;
 
     await test.step("Capture balances on the UI BEFORE transfer", async () => {
-      logger.info(
-        "Navigating to Overview Page to capture initial UI balances",
-      );
+      logger.info("Navigating to Overview Page ");
       await overviewPage.goto();
       const loadTime = await overviewPage.getLoadTime();
       logger.info(`Overview Page in TC-009 loaded in ${loadTime}ms`);

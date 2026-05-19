@@ -1,17 +1,23 @@
-import { Page, expect } from "@playwright/test";
+import { Page, Locator, expect } from "@playwright/test";
 import { CONFIG, PATH } from "../config/config";
 import { getPageLoadTime } from "../utils/loadTimeUtils";
 
 export class LoginPage {
   readonly page: Page;
-  private readonly usernameInput = '[name="username"]';
-  private readonly passwordInput = '[name="password"]';
-  private readonly loginButton = '[value="Log In"]';
-  private readonly errorMessage = ".error";
-  private readonly welcomeText = "#leftPanel p.smallText";
+
+  // Define locators as types instead of raw strings
+  private readonly usernameInput: Locator;
+  private readonly passwordInput: Locator;
+  private readonly loginButton: Locator;
+  private readonly registerLink: Locator;
 
   constructor(page: Page) {
     this.page = page;
+
+    this.usernameInput = page.locator('input[name="username"]');
+    this.passwordInput = page.locator('input[name="password"]');
+    this.loginButton = page.getByRole("button", { name: "Log In" });
+    this.registerLink = page.getByRole("link", { name: "Register" });
   }
 
   async goto(): Promise<void> {
@@ -19,16 +25,19 @@ export class LoginPage {
   }
 
   async login(username: string, password: string): Promise<void> {
-    await this.page.fill(this.usernameInput, username);
-    await this.page.fill(this.passwordInput, password);
+    // Fill uses the Locator directly now
+    await this.usernameInput.fill(username);
+    await this.passwordInput.fill(password);
 
     await this.page.screenshot({
       path: "test-results/screenshots/before-login.png",
     });
 
-    await this.page.click(this.loginButton);
+    // Click uses the Locator directly
+    await this.loginButton.click();
     await this.page.waitForURL("**/overview.htm", { timeout: 15000 });
   }
+
   async gotoAndLogin(
     username = CONFIG.USERNAME,
     password = CONFIG.PASSWORD,

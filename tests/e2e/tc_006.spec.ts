@@ -7,7 +7,7 @@ import { logger } from "../../utils/logger";
 test(
   "tc-006 ,E2E Transaction Logging Sync",
   {
-    tag: ["@e2e", "@regression"],
+    tag: ["@e2e"],
   },
   async ({ transferPage, overviewPage, request }) => {
     let uiFromBefore: number;

@@ -1,21 +1,28 @@
-import { Page, expect } from "@playwright/test";
+import { Page, Locator, expect } from "@playwright/test";
 import { PATH } from "../config/config";
 import { getPageLoadTime } from "../utils/loadTimeUtils";
 
 export class TransferPage {
   readonly page: Page;
-
-  private readonly amountInput = "#amount";
-  private readonly fromSelect = "#fromAccountId";
-  private readonly toSelect = "#toAccountId";
-  private readonly transferBtn = '[value="Transfer"]';
-
-  private readonly successHeading = "#showResult h1";
-  private readonly errorDiv = ".error";
-  private readonly pageTitle = ".title";
+  private readonly amountInput: Locator;
+  private readonly fromSelect: Locator;
+  private readonly toSelect: Locator;
+  private readonly transferBtn: Locator;
+  private readonly successHeading: Locator;
+  private readonly errorDiv: Locator;
+  private readonly pageTitle: Locator;
 
   constructor(page: Page) {
     this.page = page;
+    this.amountInput = page.locator("#amount");
+    this.fromSelect = page.locator("#fromAccountId");
+    this.toSelect = page.locator("#toAccountId");
+    this.transferBtn = page.getByRole("button", { name: "Transfer" });
+    this.successHeading = page.getByRole("heading", {
+      name: "Transfer Complete!",
+    });
+    this.pageTitle = page.locator(".title");
+    this.errorDiv = page.locator(".error");
   }
 
   async goto(): Promise<void> {
@@ -24,19 +31,19 @@ export class TransferPage {
   }
 
   async enterAmount(amount: string): Promise<void> {
-    await this.page.fill(this.amountInput, amount);
+    await this.amountInput.fill(amount);
   }
 
   async selectFromAccount(accountId: string): Promise<void> {
-    await this.page.selectOption(this.fromSelect, { value: accountId });
+    await this.fromSelect.selectOption({ value: accountId });
   }
 
   async selectToAccount(accountId: string): Promise<void> {
-    await this.page.selectOption(this.toSelect, { value: accountId });
+    await this.toSelect.selectOption({ value: accountId });
   }
 
   async getFromAccountOptionsCount(): Promise<number> {
-    const options = this.page.locator(`${this.fromSelect} option`);
+    const options = this.fromSelect.locator("option");
     return await options.count();
   }
 
@@ -44,7 +51,7 @@ export class TransferPage {
     await this.page.screenshot({
       path: `test-results/screenshots/before-transfer-${Date.now()}.png`,
     });
-    await this.page.click(this.transferBtn);
+    await this.transferBtn.click();
     await this.page.waitForLoadState("networkidle");
   }
 
@@ -60,19 +67,25 @@ export class TransferPage {
   }
 
   async getResultHeading(): Promise<string> {
-    const successEl = this.page.locator(this.successHeading);
-    if (await successEl.isVisible({ timeout: 3_000 }).catch(() => false)) {
-      return (await successEl.textContent()) ?? "";
+    if (
+      await this.successHeading.isVisible({ timeout: 3_000 }).catch(() => false)
+    ) {
+      return (await this.successHeading.textContent()) ?? "";
     }
-    const titleEl = this.page.locator(this.pageTitle);
-    return (await titleEl.textContent()) ?? "";
+
+    for (const title of await this.pageTitle.all()) {
+      if (await title.isVisible()) {
+        return (await title.textContent())?.trim() ?? "";
+      }
+    }
+    return "";
   }
 
   async getErrorText(): Promise<string> {
-    const el = this.page.locator(this.errorDiv).first();
-    const visible = await el.isVisible({ timeout: 3_000 }).catch(() => false);
-    if (visible) {
-      return (await el.textContent()) ?? "";
+    for (const el of await this.errorDiv.all()) {
+      if (await el.isVisible({ timeout: 3_000 }).catch(() => false)) {
+        return (await el.textContent())?.trim() ?? "";
+      }
     }
     return "";
   }
@@ -87,9 +100,7 @@ export class TransferPage {
   }
 
   async assertTransferSuccess(): Promise<void> {
-    await expect(this.page.locator(this.successHeading)).toContainText(
-      "Transfer Complete!",
-    );
+    await expect(this.successHeading).toBeVisible();
     await this.page.screenshot({
       path: `test-results/screenshots/transfer-success-${Date.now()}.png`,
     });
@@ -100,7 +111,7 @@ export class TransferPage {
   }
 
   async assertAmountFieldIsEmpty(): Promise<void> {
-    await expect(this.page.locator(this.amountInput)).toHaveValue("");
+    await expect(this.amountInput).toHaveValue("");
   }
 
   async getLoadTime() {

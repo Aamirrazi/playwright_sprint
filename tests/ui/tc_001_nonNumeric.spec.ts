@@ -6,7 +6,7 @@ import { logger } from "../../utils/logger";
 test(
   "tc_001 ,Non-numeric Input Validation",
   {
-    tag: ["@ui", "@regression", "@negative"],
+    tag: ["@ui", "@negative"],
   },
   async ({ transferPage }) => {
     logger.info("Starting TC_001: Non-numeric Input Validation test");

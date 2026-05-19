@@ -7,7 +7,7 @@ import { validateAccount } from "../../schemas/accountSchema";
 test(
   "tc_005 ,Verify Balance State",
   {
-    tag: ["@api", "@regression"],
+    tag: ["@api", "@nehative"],
   },
   async ({ apiRequest }) => {
     let response: APIResponse;
@@ -29,10 +29,7 @@ test(
       if (!isValid) {
         logger.error("Schema Validation Failed", validateAccount.errors);
       }
-      expect(
-        isValid,
-        `Schema Errors: ${JSON.stringify(validateAccount.errors)}`,
-      ).toBe(true);
+      expect(isValid).toBe(true);
 
       expect(
         body.balance,

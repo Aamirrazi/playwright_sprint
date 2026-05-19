@@ -7,7 +7,7 @@ import { validateAccount } from "../../schemas/accountSchema";
 test(
   "tc_008 ,Valid API Transfer & GET Account Sync",
   {
-    tag: ["@api", "@smoke", "@regression"],
+    tag: ["@api", "@positive"],
   },
   async ({ apiRequest }) => {
     let fromBalanceBefore: number;

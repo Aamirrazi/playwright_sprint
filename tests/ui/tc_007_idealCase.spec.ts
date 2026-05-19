@@ -6,7 +6,7 @@ import { logger } from "../../utils/logger";
 test(
   "tc_007 ,Valid Transfer & Accounts Overview Update",
   {
-    tag: ["@ui", "@smoke", "@regression"],
+    tag: ["@ui"],
   },
   async ({ transferPage, overviewPage }) => {
     logger.info("Starting TC_007: Valid Transfer & Accounts Overview Update");

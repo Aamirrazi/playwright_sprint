@@ -6,7 +6,7 @@ import { logger } from "../../utils/logger";
 test(
   "tc_002 ,should return 400 for negative amount",
   {
-    tag: ["@api", "@regression", "@negative"],
+    tag: ["@api", "@negative"],
   },
   async ({ apiRequest }) => {
     let response: APIResponse;
